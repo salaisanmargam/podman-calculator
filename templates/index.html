@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calculator</title>
+</head>
+<body align="center">
+    <h2>Calculator Web App</h2>
+
+    <form method="post" action="/calculate">
+        <input type="number" name="num1" required>
+        <input type="number" name="num2" required><br><br>
+
+        <button name="operation" value="add">+</button>
+        <button name="operation" value="sub">−</button>
+        <button name="operation" value="mul">×</button>
+        <button name="operation" value="div">÷</button>
+    </form>
+
+    {% if result is not none %}
+        <h3>Result: {{ result }}</h3>
+    {% endif %}
+</body>
+</html>
