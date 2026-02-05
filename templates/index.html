@@ -1,45 +1,52 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Calculator App</title>
-    <style>
-        body {
-            font-family: Arial;
-            text-align: center;
-            margin-top: 80px;
-        }
-        input, button {
-            padding: 10px;
-            font-size: 16px;
-            margin: 5px;
-        }
-        .result {
-            margin-top: 20px;
-            font-size: 22px;
-            color: green;
-        }
-    </style>
+    <title>Perfect Calculator</title>
 </head>
 <body>
+    <h2>Calculator</h2>
 
-<h2>Calculator Web Application</h2>
+    <input type="number" id="num1" placeholder="Enter first number">
+    <br><br>
 
-<form method="POST" action="/calculate">
-    <input type="number" step="any" name="num1" value="{{ num1 or '' }}" required>
-    <input type="number" step="any" name="num2" value="{{ num2 or '' }}" required>
-    <br>
+    <input type="number" id="num2" placeholder="Enter second number">
+    <br><br>
 
-    <button type="submit" name="operation" value="add">+</button>
-    <button type="submit" name="operation" value="sub">−</button>
-    <button type="submit" name="operation" value="mul">×</button>
-    <button type="submit" name="operation" value="div">÷</button>
-</form>
+    <label>Select Operator:</label>
+    <select id="operator">
+        <option value="add">+</option>
+        <option value="sub">−</option>
+        <option value="mul">×</option>
+        <option value="div">÷</option>
+    </select>
 
-{% if result is not none %}
-<div class="result">
-    Result: {{ result }}
-</div>
-{% endif %}
+    <br><br>
 
+    <button type="button" onclick="getResult()">= Get Result</button>
+
+    <h3 id="result"></h3>
+
+    <script>
+        function getResult() {
+            const a = document.getElementById("num1").value;
+            const b = document.getElementById("num2").value;
+            const op = document.getElementById("operator").value;
+
+            fetch("/calculate", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    num1: a,
+                    num2: b,
+                    operation: op
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById("result").innerText =
+                    "Result = " + data.result;
+            });
+        }
+    </script>
 </body>
 </html>

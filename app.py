@@ -1,41 +1,33 @@
-from flask import Flask, render_template, request
+from flask import Flask, request, jsonify, render_template
 
 app = Flask(__name__)
 
-@app.route("/", methods=["GET"])
-def index():
-    return render_template("index.html", result=None)
+@app.route("/")
+def home():
+    return render_template("index.html")
 
 @app.route("/calculate", methods=["POST"])
 def calculate():
-    try:
-        a = float(request.form.get("num1"))
-        b = float(request.form.get("num2"))
-        operation = request.form.get("operation")
+    data = request.get_json()
 
-        if operation == "add":
-            result = a + b
-        elif operation == "sub":
-            result = a - b
-        elif operation == "mul":
-            result = a * b
-        elif operation == "div":
-            if b == 0:
-                result = "Error: Division by zero"
-            else:
-                result = a / b
-        else:
-            result = "Invalid operation"
+    a = float(data["num1"])
+    b = float(data["num2"])
+    op = data["operation"]
 
-    except Exception as e:
-        result = "Invalid input"
+    if op == "add":
+        result = a + b
+    elif op == "sub":
+        result = a - b
+    elif op == "mul":
+        result = a * b
+    elif op == "div":
+        if b == 0:
+            return jsonify({"result": "Error: Division by zero"})
+        result = a / b
+    else:
+        return jsonify({"result": "Invalid operator"})
 
-    return render_template(
-        "index.html",
-        result=result,
-        num1=a,
-        num2=b
-    )
+    return jsonify({"result": result})
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
