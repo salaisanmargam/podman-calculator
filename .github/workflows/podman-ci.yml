@@ -1,0 +1,28 @@
+name: Podman CI Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  podman-build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install Podman
+      run: |
+        sudo apt update
+        sudo apt install -y podman
+
+    - name: Build image using Podman
+      run: |
+        podman build -t podman-calculator .
+
+    - name: Run container (validation)
+      run: |
+        podman run -d -p 5000:5000 --name test podman-calculator
+        sleep 5
+        podman ps
