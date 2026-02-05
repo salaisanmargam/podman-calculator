@@ -2,26 +2,40 @@ from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
-@app.route('/')
-def home():
-    return render_template('index.html')
+@app.route("/", methods=["GET"])
+def index():
+    return render_template("index.html", result=None)
 
-@app.route('/calculate', methods=['POST'])
+@app.route("/calculate", methods=["POST"])
 def calculate():
-    a = float(request.form['num1'])
-    b = float(request.form['num2'])
-    op = request.form['operation']
+    try:
+        a = float(request.form.get("num1"))
+        b = float(request.form.get("num2"))
+        operation = request.form.get("operation")
 
-    if op == 'add':
-        result = a + b
-    elif op == 'sub':
-        result = a - b
-    elif op == 'mul':
-        result = a * b
-    elif op == 'div':
-        result = "Error (Division by zero)" if b == 0 else a / b
+        if operation == "add":
+            result = a + b
+        elif operation == "sub":
+            result = a - b
+        elif operation == "mul":
+            result = a * b
+        elif operation == "div":
+            if b == 0:
+                result = "Error: Division by zero"
+            else:
+                result = a / b
+        else:
+            result = "Invalid operation"
 
-    return render_template('index.html', result=result, num1=a, num2=b)
+    except Exception as e:
+        result = "Invalid input"
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    return render_template(
+        "index.html",
+        result=result,
+        num1=a,
+        num2=b
+    )
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)

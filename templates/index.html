@@ -1,23 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Calculator</title>
+    <title>Calculator App</title>
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            margin-top: 80px;
+        }
+        input, button {
+            padding: 10px;
+            font-size: 16px;
+            margin: 5px;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 22px;
+            color: green;
+        }
+    </style>
 </head>
-<body align="center">
-    <h2>Calculator Web App</h2>
+<body>
 
-    <form method="post" action="/calculate">
-        <input type="number" name="num1" required>
-        <input type="number" name="num2" required><br><br>
+<h2>Calculator Web Application</h2>
 
-        <button name="operation" value="add">+</button>
-        <button name="operation" value="sub">−</button>
-        <button name="operation" value="mul">×</button>
-        <button name="operation" value="div">÷</button>
-    </form>
+<form method="POST" action="/calculate">
+    <input type="number" step="any" name="num1" value="{{ num1 or '' }}" required>
+    <input type="number" step="any" name="num2" value="{{ num2 or '' }}" required>
+    <br>
 
-    {% if result is not none %}
-        <h3>Result: {{ result }}</h3>
-    {% endif %}
+    <button type="submit" name="operation" value="add">+</button>
+    <button type="submit" name="operation" value="sub">−</button>
+    <button type="submit" name="operation" value="mul">×</button>
+    <button type="submit" name="operation" value="div">÷</button>
+</form>
+
+{% if result is not none %}
+<div class="result">
+    Result: {{ result }}
+</div>
+{% endif %}
+
 </body>
 </html>
